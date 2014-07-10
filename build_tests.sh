@@ -77,7 +77,6 @@ if [ -z $COMPILERS ]; then
 fi
 
 # 3) Check out 4 copies of repository (1 for each compiler)
-REPO=git@github.com:CVMix/CVMix-src.git
 git clone $REPO $TESTDIR &>> $BLDLOG
 cd $TESTDIR
 
@@ -85,24 +84,6 @@ for compiler in ${COMPILERS[@]}
 do
   # 3a) Set environment for building (load modules)
   loadmod $compiler $MACHINE
-  case $compiler in
-    "gnu" )
-      FC=gfortran
-    ;;
-    "intel" )
-      FC=ifort
-    ;;
-    "pgi" )
-      FC=pgf90
-    ;;
-    "nag" )
-      FC=nagfor
-    ;;
-    * )
-      echo "ERROR: $compiler is not a valid compiler!"
-      exit 1
-    ;;
-  esac
 
   # 3b) Run cvmix_setup
   cd bld/

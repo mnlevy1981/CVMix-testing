@@ -10,6 +10,7 @@ loadmod () {
   COMPILER=$1
   MACHINE=$2
 
+  # Load proper environment for COMPILER on MACHINE
   case $MACHINE in
     "goldbach" )
       module purge
@@ -37,4 +38,25 @@ loadmod () {
       exit 2
     ;;
   esac
+
+  # Set FC (needed for cvmix_setup)
+  case $compiler in
+    "gnu" )
+      FC=gfortran
+    ;;
+    "intel" )
+      FC=ifort
+    ;;
+    "pgi" )
+      FC=pgf90
+    ;;
+    "nag" )
+      FC=nagfor
+    ;;
+    * )
+      echo "ERROR: $compiler is not a valid compiler!"
+      exit 1
+    ;;
+  esac
+
 }

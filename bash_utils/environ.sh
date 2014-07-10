@@ -6,4 +6,5 @@ SUMMARY_FILE="$ROOTDIR/logs/summary.$DATE"
 BLDLOG="$ROOTDIR/logs/buildlog.$DATE"
 ERR_CNT=0
 TESTDIR=CVMix.$DATE
+REPO=git@github.com:CVMix/CVMix-src.git
 COMPILERS=()
