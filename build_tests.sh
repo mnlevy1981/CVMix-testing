@@ -26,8 +26,12 @@ build_usage () {
 #                                                                             #
 ###############################################################################
 
-COMPILERS=()
-# 1) Parse inputs
+# 1) Initialize variables, load functions
+. bash_utils/environ.sh
+. bash_utils/loadmod.sh
+. bash_utils/setcompiler.sh
+
+# 2) Parse inputs
 while [ $# -gt 0 ]
 do
   case $1 in
@@ -60,23 +64,17 @@ do
   shift
 done
 
+# Error out if MACHINE is not set
 if [ -z $MACHINE ]; then
   echo "ERROR: you must specify the machine you are running on"
   build_usage
   exit 2
 fi
 
-# 2) Initialize variables
-DATE=`date +%y%m%d-%H%M%S`
-ROOTDIR=`pwd -P`
+# Use default compiler if COMPILERS is not set
 if [ -z $COMPILERS ]; then
-  COMPILERS=( "gnu" "intel" "pgi" "nag" )
+  setcompiler $MACHINE
 fi
-SUMMARY_FILE="$ROOTDIR/logs/summary.$DATE"
-BLDLOG="$ROOTDIR/logs/buildlog.$DATE"
-ERR_CNT=0
-TESTDIR=CVMix.$DATE
-. bash_utils/loadmod.sh
 
 # 3) Check out 4 copies of repository (1 for each compiler)
 REPO=git@github.com:CVMix/CVMix-src.git
