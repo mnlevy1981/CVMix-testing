@@ -43,52 +43,51 @@ COMPILERS=( "gnu" "intel" "pgi" "nag" )
 SUMMARY_FILE="$ROOTDIR/logs/summary.$DATE"
 BLDLOG="$ROOTDIR/logs/buildlog.$DATE"
 ERR_CNT=0
+TESTDIR=CVMix.$DATE
 
 # 1) Check out 4 copies of repository (1 for each compiler)
 REPO=git@github.com:CVMix/CVMix-src.git
+git clone $REPO $TESTDIR &>> $BLDLOG
+cd $TESTDIR
 
 for compiler in ${COMPILERS[@]}
 do
-  TESTDIR=CVMix-$compiler.$DATE
-  git clone $REPO $TESTDIR &>> $BLDLOG
-  cd $TESTDIR
-
-  # 1a) Set environment for building (load modules, set .CVMix_env)
+  # 1a) Set environment for building (load modules)
   case $compiler in
     "gnu")
       gnu_env
-      echo "Building with GNU compiler..."
-      echo "FC = gfortran" > bld/.CVMix_env
+      FC=gfortran
     ;;
     "intel")
       intel_env
-      echo "Building with intel compiler..."
-      echo "FC = ifort" > bld/.CVMix_env
+      FC=ifort
     ;;
     "pgi")
       pgi_env
-      echo "Building with PGI compiler..."
-      echo "FC = pgf90" > bld/.CVMix_env
+      FC=pgf90
     ;;
     "nag")
       nag_env
-      echo "Building with NAG compiler..."
-      echo "FC = nagfor" > bld/.CVMix_env
+      FC=nagfor
     ;;
     *)
       echo "No option set for $compiler"
       exit 1
     ;;
   esac
-  echo "NETCDF_INC = $NETCDF_PATH/include" >> bld/.CVMix_env
-  echo "NETCDF_LIB = $NETCDF_PATH/lib" >> bld/.CVMix_env
 
-  # 1b) Build without netcdf
+  # 1b) Run cvmix_setup
+  cd bld/
+  ./cvmix_setup $FC "$NETCDF_PATH"
+  cd ..
+
+  # 1c) Build without netcdf
   echo "Trying to build with all compilers:" >> $SUMMARY_FILE
   cd src
   make &>> $BLDLOG
   if [ $? -eq 0 ]; then
     echo "Successfully built using $compiler without netcdf!" | tee -a $SUMMARY_FILE
+    mv ../bin/cvmix ../bin/cvmix.no_netcdf.$compiler
   else
     echo "ERROR: Could not build using $compiler without netcdf!" | tee -a $SUMMARY_FILE
     ERR_CNT=$((ERR_CNT+1))
@@ -98,13 +97,15 @@ do
   make netcdf &>> $BLDLOG
   if [ $? -eq 0 ]; then
     echo "Successfully built using $compiler with netcdf!" | tee -a $SUMMARY_FILE
+    mv ../bin/cvmix ../bin/cvmix.netcdf.$compiler
   else
     echo "ERROR: Could not build using $compiler with netcdf!" | tee -a $SUMMARY_FILE
     ERR_CNT=$((ERR_CNT+1))
   fi
+  make distclean &>> $BLDLOG
 
-  # Back up to ROOTDIR for next compiler
-  cd $ROOTDIR
+  # Back up to TESTDIR for next compiler
+  cd $ROOTDIR/$TESTDIR
 done
 
 # REPORT BACK
