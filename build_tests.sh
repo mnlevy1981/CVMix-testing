@@ -1,87 +1,117 @@
 #!/bin/bash
 
-##############################################################################
-#                                                                            #
-#           CHANGE THESE ROUTINES IF MODULES NEED TO BE UPDATED              #
-#                                                                            #
-##############################################################################
+###############################################################################
+#                                                                             #
+#                                    USAGE                                    #
+#                                                                             #
+###############################################################################
 
-gnu_env ()
-{
-  module purge &>> $BLDLOG
-  module load compiler/gnu/4.4.7 &>> $BLDLOG
+build_usage () {
+  echo "usage:"
+  echo './build_tests.sh -mach MACHINENAME [-compilers "COMP1 COMP2 ... COMPN"]'
+  echo ''
+  echo "Required flags:"
+  echo "-mach        Name of machine to run tests on"
+  echo "             Currently supported:"
+  echo "             * goldbach [CGD machine at NCAR]"
+  echo "Optional flags:"
+  echo "-compilers   List of compilers to test (default is all available on machine)"
+  echo "-clean       Wipe out all logs and directories created by this tool"
+  echo "-h           Show this help menu"
 }
 
-intel_env ()
-{
-  module purge &>> $BLDLOG
-  module load compiler/intel &>> $BLDLOG
-}
+###############################################################################
+#                                                                             #
+#                                MAIN ROUTINE                                 #
+#                                                                             #
+###############################################################################
 
-pgi_env ()
-{
-      module purge &>> $BLDLOG
-      module load compiler/pgi &>> $BLDLOG
-}
+COMPILERS=()
+# 1) Parse inputs
+while [ $# -gt 0 ]
+do
+  case $1 in
+    -mach )
+      MACHINE=$2
+      shift
+    ;;
+    -compiler|-compilers )
+      for compiler in $2
+      do
+        COMPILERS+=("$compiler")
+      done
+      shift
+    ;;
+    -clean )
+      rm -rf CVMix.*
+      rm -f logs/buildlog.* logs/summary.*
+      exit 0
+    ;;
+    -h )
+      build_usage
+      exit 0
+    ;;
+    * )
+      echo "ERROR: $1 is not a valid option!"
+      build_usage
+      exit 1
+    ;;
+  esac
+  shift
+done
 
-nag_env ()
-{
-      module purge &>> $BLDLOG
-      module load compiler/nag &>> $BLDLOG
-}
+if [ -z $MACHINE ]; then
+  echo "ERROR: you must specify the machine you are running on"
+  build_usage
+  exit 2
+fi
 
-##############################################################################
-#                                                                            #
-#                             MAIN ROUTINE                                   #
-#                                                                            #
-##############################################################################
-
-# 0) Initialize variables
+# 2) Initialize variables
 DATE=`date +%y%m%d-%H%M%S`
 ROOTDIR=`pwd -P`
-COMPILERS=( "gnu" "intel" "pgi" "nag" )
+if [ -z $COMPILERS ]; then
+  COMPILERS=( "gnu" "intel" "pgi" "nag" )
+fi
 SUMMARY_FILE="$ROOTDIR/logs/summary.$DATE"
 BLDLOG="$ROOTDIR/logs/buildlog.$DATE"
 ERR_CNT=0
 TESTDIR=CVMix.$DATE
+. bash_utils/loadmod.sh
 
-# 1) Check out 4 copies of repository (1 for each compiler)
+# 3) Check out 4 copies of repository (1 for each compiler)
 REPO=git@github.com:CVMix/CVMix-src.git
 git clone $REPO $TESTDIR &>> $BLDLOG
 cd $TESTDIR
 
 for compiler in ${COMPILERS[@]}
 do
-  # 1a) Set environment for building (load modules)
+  # 3a) Set environment for building (load modules)
+  loadmod $compiler $MACHINE
   case $compiler in
-    "gnu")
-      gnu_env
+    "gnu" )
       FC=gfortran
     ;;
-    "intel")
-      intel_env
+    "intel" )
       FC=ifort
     ;;
-    "pgi")
-      pgi_env
+    "pgi" )
       FC=pgf90
     ;;
-    "nag")
-      nag_env
+    "nag" )
       FC=nagfor
     ;;
-    *)
-      echo "No option set for $compiler"
+    * )
+      echo "ERROR: $compiler is not a valid compiler!"
       exit 1
     ;;
   esac
 
-  # 1b) Run cvmix_setup
+  # 3b) Run cvmix_setup
   cd bld/
   ./cvmix_setup $FC "$NETCDF_PATH"
   cd ..
 
-  # 1c) Build without netcdf
+  # 3c) Build without netcdf
   echo "Trying to build with all compilers:" >> $SUMMARY_FILE
   cd src
   make &>> $BLDLOG
@@ -93,7 +123,7 @@ do
     ERR_CNT=$((ERR_CNT+1))
   fi
 
-  # 1c) Build with netcdf
+  # 3d) Build with netcdf
   make netcdf &>> $BLDLOG
   if [ $? -eq 0 ]; then
     echo "Successfully built using $compiler with netcdf!" | tee -a $SUMMARY_FILE
