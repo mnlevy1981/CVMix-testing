@@ -32,6 +32,7 @@ build_usage () {
 . bash_utils/loadmod.sh
 . bash_utils/setcompiler.sh
 . bash_utils/build_test.sh
+. bash_utils/run_test.sh
 
 # 2) Parse inputs
 while [ $# -gt 0 ]
@@ -50,7 +51,7 @@ do
     ;;
     -clean )
       rm -rf CVMix.*
-      rm -f logs/buildlog.* logs/summary.*
+      rm -f logs/buildlog.* logs/runlog.* logs/summary.*
       exit 0
     ;;
     -h )
@@ -79,13 +80,14 @@ if [ -z $COMPILERS ]; then
 fi
 
 # 3) Check out clean copy of repository
-git clone $REPO $TESTDIR &>> $BLDLOG
+git clone $REPO $TESTDIR &>> $SUMMARY_FILE
 cd $TESTDIR
 
 # 4) Build test
 buildtest
 
 # 5) Run test
+runtest
 
 # REPORT BACK
 echo "There were $ERR_CNT errors encountered along the way!"

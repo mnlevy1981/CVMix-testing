@@ -2,11 +2,12 @@
 
 buildtest () {
 
-  echo "Trying to build with all compilers:" | tee -a $SUMMARY_FILE
-  echo "----"
+  echo "Trying to build with following compilers: ${COMPILERS[*]}" | tee -a $SUMMARY_FILE
+  echo "----" | tee -a $SUMMARY_FILE
   COMP_CNT=0
   for compiler in ${COMPILERS[@]}
   do
+    BLDLOG="$ROOTDIR/logs/buildlog.$compiler.$DATE"
     COMP_CNT=$((COMP_CNT+1))
 
     # (a) Set environment for building (load modules)
@@ -37,6 +38,7 @@ buildtest () {
       if [ $? -eq 0 ]; then
         echo "    ... built executable using $compiler with netcdf" | tee -a $SUMMARY_FILE
         mv ../bin/cvmix ../bin/cvmix.netcdf.$compiler
+        RUNCOMPILERS+=($compiler)
       else
         echo "    ERROR: Could not build using $compiler with netcdf" | tee -a $SUMMARY_FILE
         ERR_CNT=$((ERR_CNT+1))
