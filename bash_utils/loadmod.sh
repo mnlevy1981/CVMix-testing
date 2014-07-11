@@ -58,6 +58,7 @@ loadmod () {
           exit 3
         ;;
       esac
+      module load ncarcompilers ncarbinlibs
       NETCDF_DIR=$NETCDF
     ;;
     * )
