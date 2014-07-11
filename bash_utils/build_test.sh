@@ -41,11 +41,11 @@ buildtest () {
         echo "    ERROR: Could not build using $compiler with netcdf" | tee -a $SUMMARY_FILE
         ERR_CNT=$((ERR_CNT+1))
       fi
-      make distclean &>> $BLDLOG
     else
       echo "($COMP_CNT) ERROR: Could not build libcvmix.a using $compiler" | tee -a $SUMMARY_FILE
       ERR_CNT=$((ERR_CNT+1))
     fi
+    make distclean &>> $BLDLOG
   done
 
   echo ""
