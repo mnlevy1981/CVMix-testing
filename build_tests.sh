@@ -31,6 +31,7 @@ build_usage () {
 . bash_utils/environ.sh
 . bash_utils/loadmod.sh
 . bash_utils/setcompiler.sh
+. bash_utils/build_test.sh
 
 # 2) Parse inputs
 while [ $# -gt 0 ]
@@ -77,46 +78,14 @@ if [ -z $COMPILERS ]; then
   setcompiler $MACHINE
 fi
 
-# 3) Check out 4 copies of repository (1 for each compiler)
+# 3) Check out clean copy of repository
 git clone $REPO $TESTDIR &>> $BLDLOG
 cd $TESTDIR
 
-for compiler in ${COMPILERS[@]}
-do
-  # 3a) Set environment for building (load modules)
-  loadmod $compiler $MACHINE
+# 4) Build test
+buildtest
 
-  # 3b) Run cvmix_setup
-  cd bld/
-  ./cvmix_setup $FC "$NETCDF_DIR"
-  cd ..
-
-  # 3c) Build without netcdf
-  echo "Trying to build with all compilers:" >> $SUMMARY_FILE
-  cd src
-  make &>> $BLDLOG
-  if [ $? -eq 0 ]; then
-    echo "Successfully built using $compiler without netcdf!" | tee -a $SUMMARY_FILE
-    mv ../bin/cvmix ../bin/cvmix.no_netcdf.$compiler
-  else
-    echo "ERROR: Could not build using $compiler without netcdf!" | tee -a $SUMMARY_FILE
-    ERR_CNT=$((ERR_CNT+1))
-  fi
-
-  # 3d) Build with netcdf
-  make netcdf &>> $BLDLOG
-  if [ $? -eq 0 ]; then
-    echo "Successfully built using $compiler with netcdf!" | tee -a $SUMMARY_FILE
-    mv ../bin/cvmix ../bin/cvmix.netcdf.$compiler
-  else
-    echo "ERROR: Could not build using $compiler with netcdf!" | tee -a $SUMMARY_FILE
-    ERR_CNT=$((ERR_CNT+1))
-  fi
-  make distclean &>> $BLDLOG
-
-  # Back up to TESTDIR for next compiler
-  cd $ROOTDIR/$TESTDIR
-done
+# 5) Run test
 
 # REPORT BACK
 echo "There were $ERR_CNT errors encountered along the way!"
