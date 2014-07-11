@@ -8,7 +8,7 @@
 
 build_usage () {
   echo "usage:"
-  echo './build_tests.sh -mach MACHINENAME [-compilers "COMP1 COMP2 ... COMPN"]'
+  echo './CVMix_testing.sh -mach MACHINENAME [-compilers "COMP1 COMP2 ... COMPN"]'
   echo ''
   echo "Required flags:"
   echo "-mach        Name of machine to run tests on"
