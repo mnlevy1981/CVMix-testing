@@ -32,6 +32,33 @@ loadmod () {
           exit 3
         ;;
       esac
+      NETCDF_DIR=$NETCDF_PATH
+    ;;
+    "yellowstone" )
+      module purge
+      case $COMPILER in
+        "gnu" )
+          module load gnu/4.4.7
+          module load netcdf
+        ;;
+        "intel" )
+          module load intel
+          module load netcdf
+        ;;
+        "pgi" )
+          module load pgi
+          module load netcdf
+        ;;
+        "pathscale" )
+          module load pathscale
+          module load netcdf
+        ;;
+        * )
+          echo "ERROR (loadmod): $COMPILER is not a valid compiler for $MACHINE"
+          exit 3
+        ;;
+      esac
+      NETCDF_DIR=$NETCDF
     ;;
     * )
       echo "ERROR (loadmod): $MACHINE is not a supported machine at this time!"
@@ -53,8 +80,11 @@ loadmod () {
     "nag" )
       FC=nagfor
     ;;
+    "pathscale" )
+      FC=pathf95
+    ;;
     * )
-      echo "ERROR: $compiler is not a valid compiler!"
+      echo "ERROR (loadmod): $compiler is not a valid compiler!"
       exit 1
     ;;
   esac

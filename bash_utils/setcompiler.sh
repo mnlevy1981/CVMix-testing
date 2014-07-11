@@ -13,6 +13,9 @@ setcompiler () {
     "goldbach" )
       COMPILERS=( "gnu" "intel" "pgi" "nag" )
     ;;
+    "yellowstone" )
+      COMPILERS=( "gnu" "intel" "pgi" "pathscale" )
+    ;;
     * )
       echo "ERROR (setcompiler): $MACHINE is not a supported machine at this time!"
       exit 2

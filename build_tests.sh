@@ -13,7 +13,8 @@ build_usage () {
   echo "Required flags:"
   echo "-mach        Name of machine to run tests on"
   echo "             Currently supported:"
-  echo "             * goldbach [CGD machine at NCAR]"
+  echo "               * goldbach [CGD machine at NCAR]"
+  echo "               * yellowstone [CISL machine at NCAR]"
   echo "Optional flags:"
   echo "-compilers   List of compilers to test (default is all available on machine)"
   echo "-clean       Wipe out all logs and directories created by this tool"
@@ -87,7 +88,7 @@ do
 
   # 3b) Run cvmix_setup
   cd bld/
-  ./cvmix_setup $FC "$NETCDF_PATH"
+  ./cvmix_setup $FC "$NETCDF_DIR"
   cd ..
 
   # 3c) Build without netcdf

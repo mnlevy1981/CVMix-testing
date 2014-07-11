@@ -8,3 +8,7 @@ ERR_CNT=0
 TESTDIR=CVMix.$DATE
 REPO=git@github.com:CVMix/CVMix-src.git
 COMPILERS=()
+
+if [ ! -e logs ]; then
+  mkdir -p logs
+fi
