@@ -80,7 +80,7 @@ if [ -z $COMPILERS ]; then
 fi
 
 # 3) Check out clean copy of repository
-git clone $REPO $TESTDIR &>> $SUMMARY_FILE
+git clone $REPO $TESTDIR >> $SUMMARY_FILE 2>&1
 cd $TESTDIR
 
 # 4) Build test

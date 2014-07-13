@@ -16,6 +16,9 @@ setcompiler () {
     "yellowstone" )
       COMPILERS=( "gnu" "intel" "pgi" "pathscale" )
     ;;
+    "hopper" )
+      COMPILERS=( "pgi" "cray" "intel" )
+    ;;
     * )
       echo "ERROR (setcompiler): $MACHINE is not a supported machine at this time!"
       exit 2
