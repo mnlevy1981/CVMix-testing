@@ -69,7 +69,6 @@ loadmod () {
         ;;
         "gnu" )
           module load PrgEnv-gnu
-          module swap gcc gcc/4.4.4
         ;;
         "intel" )
           module load PrgEnv-intel

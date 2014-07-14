@@ -17,7 +17,7 @@ setcompiler () {
       COMPILERS=( "gnu" "intel" "pgi" "pathscale" )
     ;;
     "hopper" )
-      COMPILERS=( "pgi" "cray" "intel" )
+      COMPILERS=( "pgi" "gnu" "cray" "intel" )
     ;;
     * )
       echo "ERROR (setcompiler): $MACHINE is not a supported machine at this time!"
