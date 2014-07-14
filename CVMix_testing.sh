@@ -80,8 +80,13 @@ if [ -z $COMPILERS ]; then
 fi
 
 # 3) Check out clean copy of repository
-git clone $REPO $TESTDIR &>> $SUMMARY_FILE
+git clone $REPO $TESTDIR 2>&1 | tee -a $SUMMARY_FILE
 cd $TESTDIR
+REVNO=`git log --pretty=format:"%H" | head -n 1`
+REVINFO=`git log --pretty=format:"%an, %ad" | head -n 1`
+echo "Last commit: $REVNO" | tee -a $SUMMARY_FILE
+echo "Commit info: $REVINFO" | tee -a $SUMMARY_FILE
+echo '' | tee -a $SUMMARY_FILE
 
 # 4) Build test
 buildtest

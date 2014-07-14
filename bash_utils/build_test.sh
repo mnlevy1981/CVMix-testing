@@ -15,16 +15,21 @@ buildtest () {
 
     # (b) Run cvmix_setup
     cd $ROOTDIR/$TESTDIR/bld/
-    ./cvmix_setup $FC "$NETCDF_DIR"
+    ./cvmix_setup $FC "$NETCDF_LOC"
 
     # (c) Build libcvmix.a
     cd ../src
-    make lib &>> $BLDLOG
+    if [ $MACHINE != "hopper" ]; then
+      echo "($COMP_CNT) Trying to build using $compiler..." | tee -a $SUMMARY_FILE
+    else
+      echo "($COMP_CNT) Trying to build using $compiler (PE_ENV = $PE_ENV)..." | tee -a $SUMMARY_FILE
+    fi
+    make lib >> $BLDLOG 2>&1
     if [ $? -eq 0 ]; then
-      echo "($COMP_CNT) built libcvmix.a using $compiler..." | tee -a $SUMMARY_FILE
+      echo "    ... built libcvmix.a using $compiler" | tee -a $SUMMARY_FILE
 
       # (d) Build without netcdf
-      make &>> $BLDLOG
+      make >> $BLDLOG 2>&1
       if [ $? -eq 0 ]; then
         echo "    ... built executable using $compiler without netcdf" | tee -a $SUMMARY_FILE
         mv ../bin/cvmix ../bin/cvmix.no_netcdf.$compiler
@@ -34,7 +39,7 @@ buildtest () {
       fi
 
       # (e) Build with netcdf
-      make netcdf &>> $BLDLOG
+      make netcdf >> $BLDLOG 2>&1
       if [ $? -eq 0 ]; then
         echo "    ... built executable using $compiler with netcdf" | tee -a $SUMMARY_FILE
         mv ../bin/cvmix ../bin/cvmix.netcdf.$compiler
@@ -44,10 +49,10 @@ buildtest () {
         ERR_CNT=$((ERR_CNT+1))
       fi
     else
-      echo "($COMP_CNT) ERROR: Could not build libcvmix.a using $compiler" | tee -a $SUMMARY_FILE
+      echo "    ... ERROR: Could not build libcvmix.a using $compiler" | tee -a $SUMMARY_FILE
       ERR_CNT=$((ERR_CNT+1))
     fi
-    make distclean &>> $BLDLOG
+    make distclean >> $BLDLOG 2>&1
   done
 
   echo ""

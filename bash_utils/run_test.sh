@@ -20,7 +20,7 @@ runtest () {
 
     # (c) Run regression test
     cd ../reg_tests/Bryan-Lewis
-    ./BL_test.sh -nc -nb  &>> $RUNLOG
+    ./BL_test.sh -nc -nb  2>&1 >> $RUNLOG
     if [ $? -eq 0 ]; then
       echo "($COMP_CNT) Successfully ran using $compiler" | tee -a $SUMMARY_FILE
     else
