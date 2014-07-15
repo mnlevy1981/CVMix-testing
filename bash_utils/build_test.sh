@@ -7,7 +7,7 @@ buildtest () {
   COMP_CNT=0
   for compiler in ${COMPILERS[@]}
   do
-    BLDLOG="$ROOTDIR/logs/buildlog.$compiler.$DATE"
+    BLDLOG="$ROOTDIR/$LOGDIR/buildlog.$compiler"
     COMP_CNT=$((COMP_CNT+1))
 
     # (a) Set environment for building (load modules)
@@ -52,7 +52,7 @@ buildtest () {
       echo "    ... ERROR: Could not build libcvmix.a using $compiler" | tee -a $SUMMARY_FILE
       ERR_CNT=$((ERR_CNT+1))
     fi
-    make distclean >> $BLDLOG 2>&1
+    make distclean >> /dev/null 2>&1
   done
 
   echo ""

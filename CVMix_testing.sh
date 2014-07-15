@@ -27,14 +27,7 @@ build_usage () {
 #                                                                             #
 ###############################################################################
 
-# 1) Initialize variables, load functions
-. bash_utils/environ.sh
-. bash_utils/loadmod.sh
-. bash_utils/setcompiler.sh
-. bash_utils/build_test.sh
-. bash_utils/run_test.sh
-
-# 2) Parse inputs
+# 1) Parse inputs
 while [ $# -gt 0 ]
 do
   case $1 in
@@ -50,8 +43,8 @@ do
       shift
     ;;
     -clean )
-      rm -rf CVMix.*
-      rm -f logs/buildlog.* logs/runlog.* logs/summary.*
+      rm -rf checkouts/*
+      rm -rf logs/[a-z]*
       exit 0
     ;;
     -h )
@@ -73,6 +66,13 @@ if [ -z $MACHINE ]; then
   build_usage
   exit 2
 fi
+
+# 2) Initialize variables, load functions
+. bash_utils/environ.sh
+. bash_utils/loadmod.sh
+. bash_utils/setcompiler.sh
+. bash_utils/build_test.sh
+. bash_utils/run_test.sh
 
 # Use default compiler if COMPILERS is not set
 if [ -z $COMPILERS ]; then

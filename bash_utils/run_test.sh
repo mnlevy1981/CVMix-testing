@@ -7,7 +7,7 @@ runtest () {
   COMP_CNT=0
   for compiler in ${RUNCOMPILERS[@]}
   do
-    RUNLOG="$ROOTDIR/logs/runlog.$compiler.$DATE"
+    RUNLOG="$ROOTDIR/$LOGDIR/runlog.$compiler"
     COMP_CNT=$((COMP_CNT+1))
 
     # (a) Set environment for building (load modules)
