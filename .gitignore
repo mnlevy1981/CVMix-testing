@@ -1,4 +1,4 @@
 baselines
 logs
-CVMix.*
+checkouts
 .*.swp

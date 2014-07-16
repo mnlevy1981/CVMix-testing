@@ -16,7 +16,7 @@ loadmod () {
       module purge
       case $COMPILER in
         "gnu" )
-          module load compiler/gnu
+          module load compiler/gnu/4.4.7
         ;;
         "intel" )
           module load compiler/intel
