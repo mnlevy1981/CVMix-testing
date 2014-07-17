@@ -18,15 +18,49 @@ runtest () {
     rm -f cvmix
     ln -s cvmix.netcdf.$compiler cvmix
 
-    # (c) Run regression test
+    # (c) Run regression tests
+    echo "($COMP_CNT) Running tests with $compiler..." | tee -a $SUMMARY_FILE
+
+    #     (i) Bryan-Lewis
     cd ../reg_tests/Bryan-Lewis
     ./BL_test.sh -nc -nb  2>&1 >> $RUNLOG
     if [ $? -eq 0 ]; then
-      echo "($COMP_CNT) Successfully ran using $compiler" | tee -a $SUMMARY_FILE
+      echo "    ... Successfully ran BL test" | tee -a $SUMMARY_FILE
     else
-      echo "($COMP_CNT) ERROR: Could not run using $compiler" | tee -a $SUMMARY_FILE
+      echo "    ERROR: Could not run BL test" | tee -a $SUMMARY_FILE
       ERR_CNT=$((ERR_CNT+1))
     fi
+
+    #     (ii) Double Diffusion
+    cd ../double_diff
+    ./double_diff-test.sh -nc -nb  2>&1 >> $RUNLOG
+    if [ $? -eq 0 ]; then
+      echo "    ... Successfully ran double diffusion test" | tee -a $SUMMARY_FILE
+    else
+      echo "    ERROR: Could not run double diffusion test" | tee -a $SUMMARY_FILE
+      ERR_CNT=$((ERR_CNT+1))
+    fi
+
+    #     (iii) Shear mixing
+    cd ../shear-KPP
+    ./Large_test.sh -nc -nb  2>&1 >> $RUNLOG
+    if [ $? -eq 0 ]; then
+      echo "    ... Successfully ran shear mixing test" | tee -a $SUMMARY_FILE
+    else
+      echo "    ERROR: Could not run shear mixing test" | tee -a $SUMMARY_FILE
+      ERR_CNT=$((ERR_CNT+1))
+    fi
+
+    #     (iii) KPP
+    cd ../kpp
+    ./kpp-test.sh -nc -nb  2>&1 >> $RUNLOG
+    if [ $? -eq 0 ]; then
+      echo "    ... Successfully ran KPP test" | tee -a $SUMMARY_FILE
+    else
+      echo "    ERROR: Could not run KPP test" | tee -a $SUMMARY_FILE
+      ERR_CNT=$((ERR_CNT+1))
+    fi
+
   done
 
   echo ""

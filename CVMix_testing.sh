@@ -28,6 +28,7 @@ build_usage () {
 ###############################################################################
 
 # 1) Parse inputs
+COMPILERS=()
 while [ $# -gt 0 ]
 do
   case $1 in
@@ -75,7 +76,7 @@ fi
 . bash_utils/run_test.sh
 
 # Use default compiler if COMPILERS is not set
-if [ -z $COMPILERS ]; then
+if [ ${#COMPILERS[@]} -eq 0 ]; then
   setcompiler $MACHINE
 fi
 
