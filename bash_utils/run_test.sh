@@ -51,7 +51,17 @@ runtest () {
       ERR_CNT=$((ERR_CNT+1))
     fi
 
-    #     (iii) KPP
+    #     (iv) tidal mixing
+    cd ../tidal-Simmons
+    ./Simmons-test.sh -nc -nb -inputdata $ROOTDIR/inputdata  2>&1 >> $RUNLOG
+    if [ $? -eq 0 ]; then
+      echo "    ... Successfully ran tidal test" | tee -a $SUMMARY_FILE
+    else
+      echo "    ERROR: Could not run tidal test" | tee -a $SUMMARY_FILE
+      ERR_CNT=$((ERR_CNT+1))
+    fi
+
+    #     (v) KPP
     cd ../kpp
     ./kpp-test.sh -nc -nb  2>&1 >> $RUNLOG
     if [ $? -eq 0 ]; then
