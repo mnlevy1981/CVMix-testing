@@ -19,7 +19,10 @@ loadmod () {
           module load compiler/gnu/4.4.7
         ;;
         "intel" )
-          module load compiler/intel/14.0.2
+          # 13.1.2 and 14.0.2 both build as of Aug 4, but the default intel
+          # compiler is 14.0.0 which doesn't link to netCDF correctly. Sticking
+          # with 13.1.2 until 14.1 is available (assuming it works)
+          module load compiler/intel/13.1.2
         ;;
         "pgi" )
           module load compiler/pgi
