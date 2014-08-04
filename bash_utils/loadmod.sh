@@ -19,7 +19,7 @@ loadmod () {
           module load compiler/gnu/4.4.7
         ;;
         "intel" )
-          module load compiler/intel
+          module load compiler/intel/14.0.2
         ;;
         "pgi" )
           module load compiler/pgi
