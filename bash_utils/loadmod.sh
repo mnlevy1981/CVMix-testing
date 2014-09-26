@@ -28,7 +28,7 @@ loadmod () {
           module load compiler/pgi
         ;;
         "nag" )
-          module load compiler/nag
+          module load compiler/nag/5.3.1-907
         ;;
         * )
           echo "ERROR (loadmod): $COMPILER is not a valid compiler for $MACHINE"
