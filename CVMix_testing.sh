@@ -8,7 +8,7 @@
 
 build_usage () {
   echo "usage:"
-  echo './CVMix_testing.sh -mach MACHINENAME [-compilers "COMP1 COMP2 ... COMPN"]'
+  echo './CVMix_testing.sh -mach MACHINENAME [-compilers "COMP1 COMP2 ... COMPN"] [-b BRANCHNAME]'
   echo ''
   echo "Required flags:"
   echo "-mach        Name of machine to run tests on"
@@ -18,6 +18,7 @@ build_usage () {
   echo "Optional flags:"
   echo "-compilers   List of compilers to test (default is all available on machine)"
   echo "-clean       Wipe out all logs and directories created by this tool"
+  echo "-b           Checkout the BRANCHNAME branch of the code"
   echo "-h           Show this help menu"
 }
 
@@ -29,6 +30,7 @@ build_usage () {
 
 # 1) Parse inputs
 COMPILERS=()
+BRANCHNAME=master
 while [ $# -gt 0 ]
 do
   case $1 in
@@ -41,6 +43,10 @@ do
       do
         COMPILERS+=("$compiler")
       done
+      shift
+    ;;
+    -b )
+      BRANCHNAME=$2
       shift
     ;;
     -clean )
@@ -81,7 +87,8 @@ if [ ${#COMPILERS[@]} -eq 0 ]; then
 fi
 
 # 3) Check out clean copy of repository
-git clone $REPO $TESTDIR 2>&1 | tee -a $SUMMARY_FILE
+echo "Grabbing the $BRANCHNAME branch..."
+git clone -b $BRANCHNAME $REPO $TESTDIR 2>&1 | tee -a $SUMMARY_FILE
 cd $TESTDIR
 REVNO=`git log --pretty=format:"%H" | head -n 1`
 REVINFO=`git log --pretty=format:"%an, %ad" | head -n 1`
