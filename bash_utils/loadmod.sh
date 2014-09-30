@@ -96,6 +96,9 @@ loadmod () {
       FC=ftn
       NETCDF_LOC=$NETCDF_DIR
     ;;
+    "darwin" )
+      NETCDF_LOC="$HOME/local/netcdf"
+    ;;
     * )
       echo "ERROR (loadmod): $MACHINE is not a supported machine at this time!"
       exit 2

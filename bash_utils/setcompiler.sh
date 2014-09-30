@@ -19,6 +19,9 @@ setcompiler () {
     "hopper" )
       COMPILERS=( "pgi" "gnu" "cray" "intel" )
     ;;
+    "darwin" )
+      COMPILERS=( "gnu" )
+    ;;
     * )
       echo "ERROR (setcompiler): $MACHINE is not a supported machine at this time!"
       exit 2
