@@ -19,6 +19,7 @@ build_usage () {
   echo "-compilers   List of compilers to test (default is all available on machine)"
   echo "-clean       Wipe out all logs and directories created by this tool"
   echo "-b           Checkout the BRANCHNAME branch of the code"
+  echo "-c           Check out specific commit"
   echo "-h           Show this help menu"
 }
 
@@ -47,6 +48,10 @@ do
     ;;
     -b )
       BRANCHNAME=$2
+      shift
+    ;;
+    -c )
+      CHECKOUT=$2
       shift
     ;;
     -clean )
@@ -90,6 +95,10 @@ fi
 echo "Grabbing the $BRANCHNAME branch..."
 git clone -b $BRANCHNAME $REPO $TESTDIR 2>&1 | tee -a $SUMMARY_FILE
 cd $TESTDIR
+if [ ! -e $CHECKOUT ]; then
+  echo "Getting commit $CHECKOUT"
+  git checkout $CHECKOUT
+fi
 REVNO=`git log --pretty=format:"%H" | head -n 1`
 REVINFO=`git log --pretty=format:"%an, %ad" | head -n 1`
 echo "Last commit: $REVNO" | tee -a $SUMMARY_FILE
