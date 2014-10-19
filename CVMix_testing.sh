@@ -16,11 +16,13 @@ build_usage () {
   echo "               * goldbach [CGD machine at NCAR]"
   echo "               * yellowstone [CISL machine at NCAR]"
   echo "Optional flags:"
-  echo "-compilers   List of compilers to test (default is all available on machine)"
-  echo "-clean       Wipe out all logs and directories created by this tool"
-  echo "-b           Checkout the BRANCHNAME branch of the code"
-  echo "-c           Check out specific commit"
-  echo "-h           Show this help menu"
+  echo "-compilers     List of compilers to test (default is all available on machine)"
+  echo "-baseline      Baseline tag for comparing output"
+  echo "-makebaseline  Make output into a new baseline tag"
+  echo "-clean         Wipe out all logs and directories created by this tool"
+  echo "-b             Checkout the BRANCHNAME branch of the code"
+  echo "-c             Check out specific commit"
+  echo "-h             Show this help menu"
 }
 
 ###############################################################################
@@ -49,6 +51,14 @@ do
     -b )
       BRANCHNAME=$2
       shift
+    ;;
+    -baseline )
+      BASELINECOMPARE=$2
+      shift;
+    ;;
+    -makebaseline )
+      NEWBASELINE=$2
+      shift;
     ;;
     -c )
       CHECKOUT=$2
@@ -85,6 +95,7 @@ fi
 . bash_utils/setcompiler.sh
 . bash_utils/build_test.sh
 . bash_utils/run_test.sh
+. bash_utils/compare_test.sh
 
 # Use default compiler if COMPILERS is not set
 if [ ${#COMPILERS[@]} -eq 0 ]; then
@@ -111,5 +122,18 @@ buildtest
 # 5) Run test
 runtest
 
+# 6) Baselines
+if [ ! -e $BASELINECOMPARE ]; then
+  compare_to_baseline
+fi
+
+if [ ! -e $NEWBASELINE ]; then
+  echo "Making new baseline: $NEWBASELINE..."
+fi
+
 # REPORT BACK
 echo "There were $ERR_CNT errors encountered along the way!"
+if [ ! -e $BASELINECOMPARE ]; then
+  echo "$BASE_ERR output files differ from the baseline"
+fi
+
