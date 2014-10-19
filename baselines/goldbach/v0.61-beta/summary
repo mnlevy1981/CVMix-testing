@@ -1,0 +1,48 @@
+Cloning into 'checkouts/141017-170941'...
+Last commit: 9bd7dec819a71fa2e96b831250383bcd82fa17db
+Commit info: Michael Levy, Fri Oct 17 17:07:59 2014 -0600
+
+Trying to build with following compilers: gnu intel pgi nag
+----
+(1) Trying to build using gnu...
+    ... built libcvmix.a using gnu
+    ... built executable using gnu without netcdf
+    ... built executable using gnu with netcdf
+(2) Trying to build using intel...
+    ... built libcvmix.a using intel
+    ... built executable using intel without netcdf
+    ... built executable using intel with netcdf
+(3) Trying to build using pgi...
+    ... built libcvmix.a using pgi
+    ... built executable using pgi without netcdf
+    ... built executable using pgi with netcdf
+(4) Trying to build using nag...
+    ... built libcvmix.a using nag
+    ... built executable using nag without netcdf
+    ... built executable using nag with netcdf
+Trying to run with following compilers: gnu intel pgi nag
+----
+(1) Running tests with gnu...
+    ... Successfully ran BL test
+    ... Successfully ran double diffusion test
+    ... Successfully ran shear mixing test
+    ... Successfully ran tidal test
+    ... Successfully ran KPP test
+(2) Running tests with intel...
+    ... Successfully ran BL test
+    ... Successfully ran double diffusion test
+    ... Successfully ran shear mixing test
+    ... Successfully ran tidal test
+    ... Successfully ran KPP test
+(3) Running tests with pgi...
+    ... Successfully ran BL test
+    ... Successfully ran double diffusion test
+    ... Successfully ran shear mixing test
+    ... Successfully ran tidal test
+    ... Successfully ran KPP test
+(4) Running tests with nag...
+    ... Successfully ran BL test
+    ... Successfully ran double diffusion test
+    ... Successfully ran shear mixing test
+    ... Successfully ran tidal test
+    ... Successfully ran KPP test
