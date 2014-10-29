@@ -42,8 +42,8 @@ runtest () {
     fi
 
     #     (iii) Shear mixing
-    cd ../shear-KPP
-    ./Large_test.sh -nc -nb  2>&1 >> $RUNLOG
+    cd ../shear
+    ./shear-test.sh -nc -nb  2>&1 >> $RUNLOG
     if [ $? -eq 0 ]; then
       echo "    ... Successfully ran shear mixing test" | tee -a $SUMMARY_FILE
     else
