@@ -71,6 +71,18 @@ runtest () {
       ERR_CNT=$((ERR_CNT+1))
     fi
 
+    #     (vi) Log Output (only on branch)
+    if [ -d ../log_output ]; then
+      cd ../log_output
+      ./log_output.sh -nb  2>&1 >> $RUNLOG
+      if [ $? -eq 0 ]; then
+        echo "    ... Successfully ran message log test" | tee -a $SUMMARY_FILE
+      else
+        echo "    ERROR: Could not run message log test" | tee -a $SUMMARY_FILE
+        ERR_CNT=$((ERR_CNT+1))
+      fi
+    fi
+
   done
 
   echo ""
