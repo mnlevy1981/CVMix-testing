@@ -14,9 +14,9 @@ compare_to_baseline () {
     BASE_CNT=$((BASE_CNT+1))
 
     echo "($BASE_CNT) Comparing runlog.$compiler to baseline..."
-    diff $BASELOG $RUNLOG
+    diff -w $BASELOG $RUNLOG
     if [ $? -ne 0 ]; then
-    diff $BASELOG $RUNLOG >> $SUMMARY_FILE
+    diff -w $BASELOG $RUNLOG >> $SUMMARY_FILE
       BASE_ERR=$((BASE_ERR+1))
       echo "    ... files differ!" | tee -a $SUMMARY_FILE
     else
