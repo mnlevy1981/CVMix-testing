@@ -6,7 +6,11 @@ ROOTDIR=`pwd -P`
 SUMMARY_FILE="$ROOTDIR/$LOGDIR/summary"
 ERR_CNT=0
 TESTDIR=checkouts/$DATE
-REPO=git@github.com:CVMix/CVMix-src.git
+if [ ! -z $LOCAL ]; then
+  REPO=$HOME/codes/CVMix/.git
+else
+  REPO=git@github.com:CVMix/CVMix-src.git
+fi
 RUNCOMPILERS=()
 
 if [ ! -e $LOGDIR ]; then

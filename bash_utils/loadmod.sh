@@ -99,6 +99,9 @@ loadmod () {
     "darwin" )
       NETCDF_LOC="$HOME/local/netcdf"
     ;;
+    "netbook" )
+      NETCDF_LOC="/usr"
+    ;;
     * )
       echo "ERROR (loadmod): $MACHINE is not a supported machine at this time!"
       exit 2

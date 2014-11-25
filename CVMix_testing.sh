@@ -19,6 +19,7 @@ build_usage () {
   echo "-compilers     List of compilers to test (default is all available on machine)"
   echo "-baseline      Baseline tag for comparing output"
   echo "-makebaseline  Make output into a new baseline tag"
+  echo "-local         Check out from $HOME/codes/CVMix instead of github"
   echo "-clean         Wipe out all logs and directories created by this tool"
   echo "-b             Checkout the BRANCHNAME branch of the code"
   echo "-c             Check out specific commit"
@@ -60,11 +61,15 @@ do
       NEWBASELINE=$2
       shift;
     ;;
+    -local )
+      LOCAL=TRUE
+    ;;
     -c )
       CHECKOUT=$2
       shift
     ;;
     -clean )
+      echo "Deleting checkouts/* and logs/[a-z]*"
       rm -rf checkouts/*
       rm -rf logs/[a-z]*
       exit 0

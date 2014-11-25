@@ -22,6 +22,9 @@ setcompiler () {
     "darwin" )
       COMPILERS=( "gnu" )
     ;;
+    "netbook" )
+      COMPILERS=( "gnu" )
+    ;;
     * )
       echo "ERROR (setcompiler): $MACHINE is not a supported machine at this time!"
       exit 2
