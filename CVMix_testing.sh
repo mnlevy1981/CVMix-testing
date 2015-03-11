@@ -134,6 +134,10 @@ fi
 
 if [ ! -e $NEWBASELINE ]; then
   echo "Making new baseline: $NEWBASELINE..."
+  NEWDIR=$ROOTDIR/baselines/$MACHINE/$NEWBASELINE
+  echo "Baselines going in $NEWDIR"
+  mkdir -p  $NEWDIR
+  cp $ROOTDIR/$LOGDIR/runlog.* $NEWDIR
 fi
 
 # REPORT BACK
