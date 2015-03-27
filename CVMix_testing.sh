@@ -111,7 +111,7 @@ if [ ${#COMPILERS[@]} -eq 0 ]; then
 fi
 
 # 3) Check out clean copy of repository
-echo "Grabbing the $BRANCHNAME branch..."
+echo "Grabbing the $BRANCHNAME branch from $REPO..."
 git clone -b $BRANCHNAME $REPO $TESTDIR 2>&1 | tee -a $SUMMARY_FILE
 cd $TESTDIR
 if [ ! -e $CHECKOUT ]; then
