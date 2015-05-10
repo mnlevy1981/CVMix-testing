@@ -72,6 +72,7 @@ loadmod () {
         ;;
         "gnu" )
           module load PrgEnv-gnu
+          module swap gcc gcc/4.8.2
         ;;
         "intel" )
           module load PrgEnv-intel
@@ -87,11 +88,13 @@ loadmod () {
           exit 3
         ;;
       esac
-      module load xt-asyncpe
       if [ $compiler != "cray" ]; then
+        module unload craype
+        module load xt-asyncpe
+        module unload cray-libsci
         module load netcdf
       else
-        module load netcdf/4.2.0
+        module load cray-netcdf
       fi
       FC=ftn
       NETCDF_LOC=$NETCDF_DIR
