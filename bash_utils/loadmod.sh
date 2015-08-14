@@ -100,7 +100,7 @@ loadmod () {
       NETCDF_LOC=$NETCDF_DIR
     ;;
     "darwin" )
-      NETCDF_LOC="$HOME/local/netcdf"
+      NETCDF_LOC="/usr/local"
     ;;
     "netbook" )
       NETCDF_LOC="/usr"
